@@ -12,6 +12,31 @@ pool:
 
 stages:
 
+  - stage: build
+      displayName: Build App
+      jobs:
+        - job: getSecrets
+            displayName: get Secrets and deploy
+            steps:
+              - task: AzureKeyVault@1
+                inputs:
+                  azureSubscription: 'Practice-Area-TC-Dev(95352c54-cee5-4d25-a9a1-0857616d97e5)'
+                  KeyVaultName: 'vault-tc-showcase-prod'
+                  SecretsFilter: '*'
+                  RunAsPreJob: true
+        - job: dockerbuild
+          displayName: Docker Build and Push
+          steps:
+            - task: Docker@2
+              inputs:
+                script:
+
+#                containerRegistry: $(containerregistrysericeconnection)
+#                repository: $(containerimagerepository)
+#                command: 'buildAndPush'
+#                Dockerfile: '**/Dockerfile'
+#                tags: '$(containerimagetag)'
+
   - stage: deploy
     displayName: Test Helm
     jobs:

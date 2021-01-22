@@ -1,0 +1,13 @@
+{
+  "name": "postgres_cdc_source",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+    "tasks.max": "1",
+    "connection.url": "jdbc:postgresql://postgres_db:5432/orderdomain",
+    "connection.user": "ntservice",
+    "connection.password": "test",
+    "mode": "incrementing",
+    "incrementing.column.name": "version",
+    "topic.prefix": "tc_showcase_source"
+  }
+}
