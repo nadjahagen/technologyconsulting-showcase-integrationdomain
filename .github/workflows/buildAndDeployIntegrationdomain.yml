@@ -52,8 +52,7 @@ jobs:
       with:
         file: ./Dockerfile.connect
         push: true
-        tags:
-          - ${GITHUB_SHA}
+        #tags: ${containerimagetag}
         build-args: |
           CONNECTORS=confluentinc/kafka-connect-jdbc:5.5.0 debezium/debezium-connector-postgresql:1.3.1
    # - uses: actions/checkout@v2
