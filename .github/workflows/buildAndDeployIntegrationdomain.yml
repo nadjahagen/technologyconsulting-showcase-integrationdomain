@@ -1,10 +1,10 @@
 on:
   push:
     branches:
-    - master
-    - deploy-debezium
+      - master
+      - deploy-debezium
 env:
-  containerimagetag: ${GITHUB_REF}
+  containerimagetag: ${GITHUB_SHA}
   containerregistry: nttcshowcase.azurecr.io
   containerimagerepository: technologyconsulting-showcase-integrationdomain
   containerregistrysericeconnection: acr-sc
@@ -14,48 +14,32 @@ jobs:
     runs-on: ubuntu-latest
     name: edit worker-config
     steps:
-    - uses: actions/checkout@v2
-    - run: |
-        echo "config.providers.azure.param.azure.client.id=$CLIENT_ID" >> /resources/k8s/deployments/confluent-platform/connect-worker.properties
-        echo "config.providers.azure.param.azure.tenant.id=$TENANT_ID" >> /resources/k8s/deployments/confluent-platform/connect-worker.properties
-        echo "config.providers.azure.param.azure.secret.id=$SECRET_ID" >> /resources/k8s/deployments/confluent-platform/connect-worker.properties
-      shell: bash
-      env:
-        CLIENT_ID: ${{secrets.TC_SHOWCASE_ARM_CLIENT_ID}}
-        TENANT_ID: ${{secrets.TC_SHOWCASE_ARM_TENANT_ID}}
-        SECRET_ID: ${{secrets.TC_SHOWCASE_ARM_CLIENT_SECRET}}
+      - run: |
+          echo "config.providers.azure.param.azure.client.id=$CLIENT_ID" >> connect-worker.properties
+          echo "config.providers.azure.param.azure.tenant.id=$TENANT_ID" >> connect-worker.properties
+          echo "config.providers.azure.param.azure.secret.id=$SECRET_ID" >> connect-worker.properties
+      - uses: pCYSl5EDgo/cat@master
+        with:
+          path: /resources/k8s/deployments/confluent-platform/connect-worker.properties
+        shell: bash
+        env:
+          CLIENT_ID: ${{secrets.TC_SHOWCASE_ARM_CLIENT_ID}}
+          TENANT_ID: ${{secrets.TC_SHOWCASE_ARM_TENANT_ID}}
+          SECRET_ID: ${{secrets.TC_SHOWCASE_ARM_CLIENT_SECRET}}
   build_Stage_getSecrets:
     runs-on: ubuntu-latest
     name: get Secrets and deploy
     steps:
-    - uses: actions/checkout@v2
-    - uses: azure/login@v1
-      with:
-        creds: ${{ secrets.TC_SHOWCASE_ARM_CLIENT_SECRET }}
-    - uses: azure/cli@v1.0.0
-      with:
-        inlineScript: az keyvault secret list --subscription "Practice-Area-TC-Dev(95352c54-cee5-4d25-a9a1-0857616d97e5)" --vault-name vault-tc-showcase-prod
-        azcliversion: latest
+      - uses: actions/checkout@v2
+      - uses: azure/cli@v1.0.0
+        with:
+          inlineScript: az keyvault secret list --subscription Practice-Area-TC-Dev(95352c54-cee5-4d25-a9a1-0857616d97e5) --vault-name vault-tc-showcase-prod
+          azcliversion: latest
   build_Stage_dockerbuild:
     runs-on: ubuntu-latest
     name: Docker Build and Push
     steps:
-    -
-      name: Login to DockerHub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.TC_SHOWCASE_DOCKERHUB_USER }}
-        password: ${{ secrets.TC_SHOWCASE_DOCKERHUB_PASSWORD }}
-    -
-      name: Build and Push
-      uses: docker/build-push-action@v2
-      with:
-        file: ./Dockerfile.connect
-        push: true
-        tags: ${GITHUB_REF}
-        build-args: |
-          CONNECTORS=confluentinc/kafka-connect-jdbc:5.5.0 debezium/debezium-connector-postgresql:1.3.1
-   # - uses: actions/checkout@v2
-   # 'Note: No conversion path currently exists for build-push (does it need two tasks in GitHub?)'
-    #  run: docker build-push . **/Dockerfile.connect ${{ env.containerregistrysericeconnection }} ${{ env.containerimagerepository }} --tags ${{ env.containerimagetag }} --build-arg CONNECTORS="confluentinc/kafka-connect-jdbc:5.5.0 debezium/debezium-connector-postgresql:1.3.1"
-                    
+      - uses: actions/checkout@v2
+      - # 'Note: No conversion path currently exists for build-push (does it need two tasks in GitHub?)'
+        run: docker build-push . --file **/Dockerfile.connect ${{ env.containerregistrysericeconnection }} ${{ env.containerimagerepository }} --tags ${{ env.containerimagetag }} --build-arg CONNECTORS="confluentinc/kafka-connect-jdbc:5.5.0 debezium/debezium-connector-postgresql:1.3.1"
+
