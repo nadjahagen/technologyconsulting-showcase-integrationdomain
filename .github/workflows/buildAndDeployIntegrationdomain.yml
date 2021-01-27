@@ -29,9 +29,9 @@ jobs:
     name: get Secrets and deploy
     steps:
     - uses: actions/checkout@v2
-    - uses: azure/CLI@v1
+    - uses: azure/cli@v1.0.0
       with:
-        inlineScript: az keyvault secret list --subscription Practice-Area-TC-Dev(95352c54-cee5-4d25-a9a1-0857616d97e5) --vault-name vault-tc-showcase-prod
+        inlineScript: az keyvault secret list --subscription 95352c54-cee5-4d25-a9a1-0857616d97e5 --vault-name vault-tc-showcase-prod
         azcliversion: latest
   build_Stage_dockerbuild:
     runs-on: ubuntu-latest
