@@ -18,7 +18,7 @@ jobs:
         echo "config.providers.azure.param.azure.client.id=$CLIENT_ID" >> connect-worker.properties
         echo "config.providers.azure.param.azure.tenant.id=$TENANT_ID" >> connect-worker.properties
         echo "config.providers.azure.param.azure.secret.id=$SECRET_ID" >> connect-worker.properties
-    - uses: pCYSl5EDgo/cat@master
+    - uses: actions/checkout@v2
       with:
         path: /resources/k8s/deployments/confluent-platform/connect-worker.properties
       shell: bash
