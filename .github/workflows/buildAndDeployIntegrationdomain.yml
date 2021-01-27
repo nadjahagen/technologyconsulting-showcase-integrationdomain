@@ -4,13 +4,15 @@ on:
     - master
     - deploy-debezium
 env:
-  containerimagetag: ${{ env.Build.SourceVersion }}
+  containerimagetag: ${{ Build.SourceVersion }}
   containerregistry: nttcshowcase.azurecr.io
   containerimagerepository: technologyconsulting-showcase-integrationdomain
   containerregistrysericeconnection: acr-sc
 
 jobs:
   build_Stage_workerConfig:
+    runs-on: ubuntu-latest
+    name: edit worker-config
     steps:
     - run: |
         echo "config.providers.azure.param.azure.client.id=$CLIENT_ID" >> **/connect-worker.properties
