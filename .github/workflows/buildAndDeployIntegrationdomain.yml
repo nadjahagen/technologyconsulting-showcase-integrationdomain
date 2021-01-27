@@ -4,7 +4,7 @@ on:
     - master
     - deploy-debezium
 env:
-  containerimagetag: ${GITHUB_SHA}
+  containerimagetag: ${GITHUB_REF}
   containerregistry: nttcshowcase.azurecr.io
   containerimagerepository: technologyconsulting-showcase-integrationdomain
   containerregistrysericeconnection: acr-sc
