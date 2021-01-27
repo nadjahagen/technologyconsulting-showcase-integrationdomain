@@ -29,6 +29,9 @@ jobs:
     name: get Secrets and deploy
     steps:
     - uses: actions/checkout@v2
+    - uses: azure/login@v1
+      with:
+        creds: ${{ TC_SHOWCASE_ARM_CLIENT_SECRET }}
     - uses: azure/cli@v1.0.0
       with:
         inlineScript: az keyvault secret list --subscription "Practice-Area-TC-Dev(95352c54-cee5-4d25-a9a1-0857616d97e5)" --vault-name vault-tc-showcase-prod

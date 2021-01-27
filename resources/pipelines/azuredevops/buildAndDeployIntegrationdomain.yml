@@ -1,7 +1,7 @@
 trigger:
 - master
 
-variables:
+variables:Subscription not recognized.
   containerimagetag: '$(Build.SourceVersion)'
   containerregistry: 'nttcshowcase.azurecr.io'
   containerimagerepository: 'technologyconsulting-showcase-integrationdomain'
