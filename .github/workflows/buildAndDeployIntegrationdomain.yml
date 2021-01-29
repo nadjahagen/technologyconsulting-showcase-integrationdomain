@@ -48,6 +48,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and push Docker images
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
       - name: Add SHORT_SHA env property with commit short sha
         run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
 
