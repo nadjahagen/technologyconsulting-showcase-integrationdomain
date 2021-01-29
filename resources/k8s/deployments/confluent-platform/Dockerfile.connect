@@ -4,4 +4,3 @@ RUN wget https://github.com/lensesio/secret-provider/releases/download/0.0.1/sec
 RUN export CLASSPATH=/usr/local/share/kafka/plugins/secret-provider-0.0.1-all.jar
 ARG CONNECTORS=""
 RUN for c in ${CONNECTORS}; do confluent-hub install --worker-configs /usr/local/share/kafka/plugins/connect-worker.properties --no-prompt $c; done;
-ENV CLASSPATH="${CLASSPATH}:/usr/share/java/custom-transforms/*"
