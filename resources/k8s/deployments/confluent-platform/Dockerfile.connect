@@ -1,5 +1,5 @@
 FROM confluentinc/cp-server-connect-base:5.5.0
-ADD  connect-worker.properties /usr/local/share/kafka/plugins
+ADD  resources/k8s/deployments/confluent-platform/connect-worker.properties /usr/local/share/kafka/plugins
 ARG CONNECTORS=""
 RUN for c in ${CONNECTORS}; do confluent-hub install --worker-configs /usr/local/share/kafka/plugins/connect-worker.properties --no-prompt $c; done;
 
