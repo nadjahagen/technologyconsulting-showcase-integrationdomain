@@ -57,15 +57,15 @@ jobs:
           tag_with_sha: true
 
       - name: edit worker-config
-        - run: |
-            echo "config.providers.azure.param.azure.client.id=$CLIENT_ID" >> connect-worker.properties
-            echo "config.providers.azure.param.azure.tenant.id=$TENANT_ID" >> connect-worker.properties
-            echo "config.providers.azure.param.azure.secret.id=$SECRET_ID" >> connect-worker.properties
-        - uses: pCYSl5EDgo/cat@master
-          with:
-            path: /resources/k8s/deployments/confluent-platform/connect-worker.properties
-            shell: bash
-          env:
-            CLIENT_ID: ${{secrets.TC_SHOWCASE_ARM_CLIENT_ID}}
-            TENANT_ID: ${{secrets.TC_SHOWCASE_ARM_TENANT_ID}}
-            SECRET_ID: ${{secrets.TC_SHOWCASE_ARM_CLIENT_SECRET}}
+        run: |
+          echo "config.providers.azure.param.azure.client.id=$CLIENT_ID" >> connect-worker.properties
+          echo "config.providers.azure.param.azure.tenant.id=$TENANT_ID" >> connect-worker.properties
+          echo "config.providers.azure.param.azure.secret.id=$SECRET_ID" >> connect-worker.properties
+#        uses: pCYSl5EDgo/cat@master
+        with:
+          path: /resources/k8s/deployments/confluent-platform/connect-worker.properties
+          shell: bash
+        env:
+          CLIENT_ID: ${{secrets.TC_SHOWCASE_ARM_CLIENT_ID}}
+          TENANT_ID: ${{secrets.TC_SHOWCASE_ARM_TENANT_ID}}
+          SECRET_ID: ${{secrets.TC_SHOWCASE_ARM_CLIENT_SECRET}}
