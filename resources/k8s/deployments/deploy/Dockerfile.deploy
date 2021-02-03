@@ -1,6 +1,5 @@
 # Tools required for deployment of app (Topics, Connectors and Ksql)
 ARG CPVERSION=""
 FROM confluentinc/cp-server${CPVERSION}
-RUN chmod +w /usr/local/bin
 RUN curl  -S -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -o /usr/local/bin/jq && chmod +x /usr/local/bin/jq
 
