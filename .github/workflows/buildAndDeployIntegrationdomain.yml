@@ -130,7 +130,15 @@ jobs:
             -v "$(pwd)/resources/k8s":/apps \
             -v "$(pwd)/resources/pipelines/helperscripts/kubeconfig":/root/.kube \
             alpine/helm \
-                upgrade confluent-platform ./charts/confluent-platform -f ./deployments/confluent-platform/kafka.values.yaml
+                upgrade confluent-platform ./charts/confluent-platform \
+                  --namespace integrationdomain \
+                  --install \
+                  --values ./deployments/confluent-platform/kafka.values.yaml \
+                  --set app.networking.ingressfqdn="${INGRESSFQDN}" \
+                  --set app.image.tag="${IMAGETAG}" \
+                  --set app.azureconfig.resourcegroup="${AKSRESOURCEGROUP}" \
+                  --set app.azureconfig.loadbalancerip="${INTEGRATIONDOMAINIP}"
+
 
   #upgrade confluent-platform ./charts/confluent-platform $(for file in ./deployments/confluent-platform/*.yaml; do echo "--values $file"; done)
   #helm install confluent-platform ./charts/confluent-platform $(for file in ./deployments/confluent-platform/*.yaml; do echo "--values $file"; done)
