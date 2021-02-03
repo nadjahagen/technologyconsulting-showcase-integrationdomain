@@ -27,6 +27,24 @@ jobs:
           TENANT_ID: ${{secrets.TC_SHOWCASE_ARM_TENANT_ID}}
           SECRET_ID: ${{secrets.TC_SHOWCASE_ARM_CLIENT_SECRET}}
 
+  build_Stage_getKubeconfig:
+    runs-on: ubuntu-latest
+    name: get Secrets and deploy
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Get Kubeconfig
+          env:
+            ARM_CLIENT_ID: ${{ secrets.TC_SHOWCASE_ARM_CLIENT_ID }}
+            ARM_CLIENT_SECRET: ${{ secrets.TC_SHOWCASE_ARM_CLIENT_SECRET }}
+            ARM_SUBSCRIPTION_ID: ${{ secrets.TC_SHOWCASE_ARM_SUBSCRIPTION_ID }}
+            ARM_TENANT_ID: ${{ secrets.TC_SHOWCASE_ARM_TENANT_ID }}
+            AKSRESOURCEGROUP: 'tc-showcase-test'
+            AKSNAME: 'k8s-tc-showcase-test'
+          working-directory: ./resources/pipelines/helperscripts
+          run: |
+            ./getKubeconfig.sh
+
   build_Stage_getSecrets:
     runs-on: ubuntu-latest
     name: get Secrets and deploy
@@ -87,4 +105,27 @@ jobs:
           repository: novatec/technologyconsulting-showcase-integrationdomain
           tags: latest, ${{ env.SHORT_SHA }}
           tag_with_sha: true
+  build_Stage_helm_deploy:
+    runs-on: ubuntu-latest
+    name: Helm install
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
+      - name: Deploy via Helm
+          env:
+            ARM_CLIENT_ID: ${{ secrets.TC_SHOWCASE_ARM_CLIENT_ID }}
+            ARM_CLIENT_SECRET: ${{ secrets.TC_SHOWCASE_ARM_CLIENT_SECRET }}
+            ARM_SUBSCRIPTION_ID: ${{ secrets.TC_SHOWCASE_ARM_SUBSCRIPTION_ID }}
+            ARM_TENANT_ID: ${{ secrets.TC_SHOWCASE_ARM_TENANT_ID }}
+            AKSRESOURCEGROUP: 'tc-showcase-test'
+            AKSNAME: 'k8s-tc-showcase-test'
+            IMAGETAG: ${{ env.SHORT_SHA }}
+          run: |
+            docker run \
+              -v "$(pwd)/resources/k8s":/apps \
+              -v "$(pwd)/resources/pipelines/helperscripts/kubeconfig":/root/.kube \
+              alpine/helm \
+                  upgrade confluent-platform ./charts/confluent-platform $(for file in ./deployments/confluent-platform/*.yaml; do echo "--values $file"; done)
+
+  #helm install confluent-platform ./charts/confluent-platform $(for file in ./deployments/confluent-platform/*.yaml; do echo "--values $file"; done)
