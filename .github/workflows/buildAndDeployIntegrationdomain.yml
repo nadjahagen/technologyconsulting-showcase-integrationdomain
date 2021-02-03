@@ -62,6 +62,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.TC_SHOWCASE_ARM_TENANT_ID }}
         working-directory: ./resources/pipelines/helperscripts
         run: |
+          chmod +x ./getKeyVaultSecrets.sh
           ./getKeyVaultSecrets.sh
 
   build_Stage_dockerbuild_connect:
@@ -129,6 +130,6 @@ jobs:
             -v "$(pwd)/resources/k8s":/apps \
             -v "$(pwd)/resources/pipelines/helperscripts/kubeconfig":/root/.kube \
             alpine/helm \
-                upgrade confluent-platform ./charts/confluent-platform $(for file in ./deployments/confluent-platform/*.yaml; do echo "--values $file"; done)
+                upgrade confluent-platform ./resources/k8s/charts/confluent-platform $(for file in ./resources/k8s/deployments/confluent-platform/*.yaml; do echo "--values $file"; done)
 
   #helm install confluent-platform ./charts/confluent-platform $(for file in ./deployments/confluent-platform/*.yaml; do echo "--values $file"; done)
