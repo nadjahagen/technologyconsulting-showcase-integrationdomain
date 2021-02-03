@@ -130,6 +130,6 @@ jobs:
             -v "$(pwd)/resources/k8s":/apps \
             -v "$(pwd)/resources/pipelines/helperscripts/kubeconfig":/root/.kube \
             alpine/helm \
-                upgrade confluent-platform ./resources/k8s/charts/confluent-platform $(for file in ./resources/k8s/deployments/confluent-platform/*.yaml; do echo "--values $file"; done)
+                upgrade confluent-platform $(pwd)/resources/k8s/charts/confluent-platform $(for file in $(pwd)/resources/k8s/deployments/confluent-platform/*.yaml; do echo "--values $file"; done)
 
   #helm install confluent-platform ./charts/confluent-platform $(for file in ./deployments/confluent-platform/*.yaml; do echo "--values $file"; done)
