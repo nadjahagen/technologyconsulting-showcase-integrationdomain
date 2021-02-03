@@ -43,7 +43,7 @@ jobs:
           AKSNAME: 'k8s-tc-showcase-test'
         working-directory: ./resources/pipelines/helperscripts
         run: |
-          ./getKubeconfig.sh
+            ./getKubeconfig.sh
 
   build_Stage_getSecrets:
     runs-on: ubuntu-latest
