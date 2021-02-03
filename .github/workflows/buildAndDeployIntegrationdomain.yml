@@ -27,26 +27,6 @@ jobs:
           TENANT_ID: ${{secrets.TC_SHOWCASE_ARM_TENANT_ID}}
           SECRET_ID: ${{secrets.TC_SHOWCASE_ARM_CLIENT_SECRET}}
 
-  build_Stage_getKubeconfig:
-    runs-on: ubuntu-latest
-    name: get Kubeconfig and deploy
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Get Kubeconfig
-        env:
-          ARM_CLIENT_ID: ${{ secrets.TC_SHOWCASE_ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.TC_SHOWCASE_ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.TC_SHOWCASE_ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.TC_SHOWCASE_ARM_TENANT_ID }}
-          AKSRESOURCEGROUP: 'tc-showcase-test'
-          AKSNAME: 'k8s-tc-showcase-test'
-        working-directory: ./resources/pipelines/helperscripts
-        run: |
-            chmod +x ./getKubeconfig.sh
-            ./getKubeconfig.sh
-
   build_Stage_getSecrets:
     runs-on: ubuntu-latest
     name: get Secrets and deploy
@@ -115,6 +95,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Get Kubeconfig
+        env:
+          ARM_CLIENT_ID: ${{ secrets.TC_SHOWCASE_ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.TC_SHOWCASE_ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.TC_SHOWCASE_ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.TC_SHOWCASE_ARM_TENANT_ID }}
+          AKSRESOURCEGROUP: 'tc-showcase-test'
+          AKSNAME: 'k8s-tc-showcase-test'
+        working-directory: ./resources/pipelines/helperscripts
+        run: |
+          chmod +x ./getKubeconfig.sh
+          ./getKubeconfig.sh
 
       - name: Deploy via Helm
         env:
