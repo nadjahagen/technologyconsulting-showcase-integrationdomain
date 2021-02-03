@@ -5,6 +5,7 @@ on:
 
   workflow_run:
     workflows: ["dockerBuildAndPush"]
+    branches: [deploy-debezium]
     types:
       - completed
 
