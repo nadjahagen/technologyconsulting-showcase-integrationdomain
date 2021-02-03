@@ -5,7 +5,7 @@ on:
     workflows: ["dockerBuildAndPush"]
     types:
       - completed
-      
+
 env:
   containerimagetag: ${GITHUB_SHA}
   containerregistry: nttcshowcase.azurecr.io
